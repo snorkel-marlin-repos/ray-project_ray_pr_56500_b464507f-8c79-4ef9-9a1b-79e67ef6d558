@@ -56,18 +56,17 @@ class CgroupManager : public CgroupManagerInterface {
     execute permissions.
    */
   static StatusOr<std::unique_ptr<CgroupManager>> Create(
-      std::string base_cgroup,
+      std::string base_cgroup_path,
       const std::string &node_id,
       const int64_t system_reserved_cpu_weight,
       const int64_t system_reserved_memory_bytes,
       std::unique_ptr<CgroupDriverInterface> cgroup_driver);
 
-  // Uncopyable type.
+  // Unmovable and uncopyable type.
   CgroupManager(const CgroupManager &) = delete;
   CgroupManager &operator=(const CgroupManager &) = delete;
-
-  CgroupManager(CgroupManager &&);
-  CgroupManager &operator=(CgroupManager &&);
+  CgroupManager(CgroupManager &&) = default;
+  CgroupManager &operator=(CgroupManager &&) = default;
 
   /**
     Performs cleanup in reverse order from the Initialize function:
@@ -81,7 +80,7 @@ class CgroupManager : public CgroupManagerInterface {
   ~CgroupManager() override;
 
  private:
-  CgroupManager(std::string base_cgroup,
+  CgroupManager(std::string base_cgroup_path,
                 const std::string &node_id,
                 std::unique_ptr<CgroupDriverInterface> cgroup_driver);
 
@@ -123,12 +122,10 @@ class CgroupManager : public CgroupManagerInterface {
   void RegisterDisableController(const std::string &cgroup,
                                  const std::string &controller);
 
-  std::string base_cgroup_;
-  std::string node_cgroup_;
-  std::string system_cgroup_;
-  std::string system_leaf_cgroup_;
-  std::string application_cgroup_;
-  std::string application_leaf_cgroup_;
+  std::string base_cgroup_path_;
+  std::string node_cgroup_path_;
+  std::string system_cgroup_path_;
+  std::string application_cgroup_path_;
 
   // This will be popped in reverse order to clean up all side-effects performed
   // during setup.

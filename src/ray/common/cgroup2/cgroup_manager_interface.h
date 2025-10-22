@@ -37,8 +37,6 @@ namespace ray {
     ray_node_<node_id>
       |           |
     system     application
-      |           |
-     leaf       leaf
 */
 class CgroupManagerInterface {
  public:
@@ -57,7 +55,6 @@ class CgroupManagerInterface {
   inline static const std::string kNodeCgroupName = "ray_node";
   inline static const std::string kSystemCgroupName = "system";
   inline static const std::string kApplicationCgroupName = "application";
-  inline static const std::string kLeafCgroupName = "leaf";
 
   // Controllers that can be enabled in Ray.
   inline static const std::unordered_set<std::string> supported_controllers_ = {"cpu",

@@ -17,7 +17,6 @@
 #include <gmock/gmock.h>
 
 #include "ray/gcs/gcs_node_manager.h"
-#include "ray/observability/fake_ray_event_recorder.h"
 
 namespace ray {
 namespace gcs {
@@ -29,9 +28,7 @@ class MockGcsNodeManager : public GcsNodeManager {
                        /*gcs_table_storage=*/nullptr,
                        /*io_context=*/mocked_io_context_not_used_,
                        /*raylet_client_pool=*/nullptr,
-                       /*cluster_id=*/ClusterID::Nil(),
-                       /*ray_event_recorder=*/fake_ray_event_recorder_,
-                       /*session_name=*/"") {}
+                       /*cluster_id=*/ClusterID::Nil()) {}
   MOCK_METHOD(void,
               HandleRegisterNode,
               (rpc::RegisterNodeRequest request,
@@ -53,7 +50,6 @@ class MockGcsNodeManager : public GcsNodeManager {
   MOCK_METHOD(void, DrainNode, (const NodeID &node_id), (override));
 
   instrumented_io_context mocked_io_context_not_used_;
-  observability::FakeRayEventRecorder fake_ray_event_recorder_;
 };
 
 }  // namespace gcs
