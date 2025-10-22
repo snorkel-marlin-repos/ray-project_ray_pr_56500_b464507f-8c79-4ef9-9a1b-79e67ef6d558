@@ -90,7 +90,7 @@ class _CallableClassProtocol(Protocol[T, U]):
         ...
 
 
-# A user defined function passed to flat_map, map_batches, etc.
+# A user defined function passed to map, map_batches, ec.
 UserDefinedFunction = Union[
     Callable[[T], U],
     Callable[[T], Iterator[U]],

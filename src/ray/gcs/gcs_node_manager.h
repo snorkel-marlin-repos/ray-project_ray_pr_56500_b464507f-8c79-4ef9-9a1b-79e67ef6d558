@@ -26,7 +26,6 @@
 #include "ray/gcs/gcs_init_data.h"
 #include "ray/gcs/gcs_table_storage.h"
 #include "ray/gcs/grpc_service_interfaces.h"
-#include "ray/observability/ray_event_recorder_interface.h"
 #include "ray/pubsub/gcs_publisher.h"
 #include "ray/rpc/raylet/raylet_client_pool.h"
 #include "ray/stats/metric_defs.h"
@@ -54,9 +53,7 @@ class GcsNodeManager : public rpc::NodeInfoGcsServiceHandler {
                  GcsTableStorage *gcs_table_storage,
                  instrumented_io_context &io_context,
                  rpc::RayletClientPool *raylet_client_pool,
-                 const ClusterID &cluster_id,
-                 observability::RayEventRecorderInterface &ray_event_recorder,
-                 const std::string &session_name);
+                 const ClusterID &cluster_id);
 
   /// Handle register rpc request come from raylet.
   void HandleGetClusterId(rpc::GetClusterIdRequest request,
@@ -193,8 +190,7 @@ class GcsNodeManager : public rpc::NodeInfoGcsServiceHandler {
   /// \return The inferred death info of the node.
   rpc::NodeDeathInfo InferDeathInfo(const NodeID &node_id);
 
-  void WriteNodeExportEvent(const rpc::GcsNodeInfo &node_info,
-                            bool is_register_event) const;
+  void WriteNodeExportEvent(const rpc::GcsNodeInfo &node_info) const;
 
   // Verify if export events should be written for EXPORT_NODE source types
   bool IsExportAPIEnabledNode() const {
@@ -274,8 +270,6 @@ class GcsNodeManager : public rpc::NodeInfoGcsServiceHandler {
   rpc::RayletClientPool *raylet_client_pool_;
   /// Cluster ID to be shared with clients when connecting.
   const ClusterID cluster_id_;
-  observability::RayEventRecorderInterface &ray_event_recorder_;
-  std::string session_name_;
 
   // Debug info.
   enum CountType {
